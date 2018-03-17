@@ -1,0 +1,63 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="inline">
+        <h1>Sign In</h1>
+        <form action="{{ url_for('login') }}" method="post">
+            {{ loginForm.hidden_tag() }}
+            <p>
+                {{ loginForm.username.label }}<br>
+                {{ loginForm.username(size=32) }}<br>
+                {% for error in loginForm.username.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ loginForm.password.label }}<br>
+                {{ loginForm.password(size=32) }}<br>
+                {% for error in loginForm.password.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>{{ loginForm.remember_me() }} {{ loginForm.remember_me.label }}</p>
+            <p>{{ loginForm.submit() }}</p>
+            <p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
+        </form>
+    </div>
+    <div class="inline">
+        <h1>Register</h1>
+        <form action="{{ url_for('register') }}" method="post">
+            {{ regForm.hidden_tag() }}
+            <p>
+                {{ regForm.username.label }}<br>
+                {{ regForm.username(size=32) }}<br>
+                {% for error in regForm.username.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ regForm.email.label }}<br>
+                {{ regForm.email(size=64) }}<br>
+                {% for error in regForm.email.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ regForm.password.label }}<br>
+                {{ regForm.password(size=32) }}<br>
+                {% for error in regForm.password.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ regForm.password2.label }}<br>
+                {{ regForm.password2(size=32) }}<br>
+                {% for error in regForm.password2.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>{{ regForm.submit() }}</p>
+        </form>
+    </div>
+{% endblock %}
