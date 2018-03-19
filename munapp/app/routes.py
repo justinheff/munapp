@@ -6,6 +6,7 @@ from app import db
 from app import DatabaseManager
 from app.forms import RegistrationForm
 from app.forms import LoginForm
+from app.forms import TopicForm
 from app.models import User
 from werkzeug.urls import url_parse
 
@@ -65,3 +66,11 @@ def index():
     topics = DatabaseManager.getAllTopics()
     comments = DatabaseManager.getAllComments()
     return render_template('index.html', title='Home', users=users, topics=topics, comments=comments)
+    
+@app.route('/create_topic', methods = ['GET', 'POST'])
+def createTopic():
+    form = TopicForm()
+    if form.validate_on_submit():
+        DatabaseManager.addTopic(user_id=current_user.id,title=form.title.data,body=form.body.data)
+        return redirect(url_for('home'))
+    return render_template('create_topic.html', title='Create New Topic', form=form)

@@ -8,7 +8,7 @@
             <div><p><b>USERNAME:</b> {{ user.username }} <b>EMAIL:</b> {{ user.email }}</p></div>
         {% endfor %}
         {% for topic in topics %}
-            <div><p><b>USERID:</b> {{ topic.user_id }} <b>TOPIC:</b> {{ topic.body }}</p></div>
+            <div><p><b>USER:</b> {{ topic.author.username }} <b>TOPIC:</b> {{ topic.title }}</p></div>
             {% for c in comments %}
                 {% if c.topic_id == topic.id %}
                     <p>ID: {{ c.user_id }}  COMMENT: {{ c.body }}</p>

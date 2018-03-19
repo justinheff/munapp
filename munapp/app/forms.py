@@ -16,7 +16,7 @@ def SpecialChar(form, field):
         raise ValidationError('Field must contain atleast 1 special character!')
 
 ## Create child of FLaskForm that defines a template for the registration form.
-## Using flask_wtf gives us extra functionality when it comes to secutity and
+## Using flask_wtf gives us extra functionality when it comes to security and
 ## validation
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -36,10 +36,13 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
 
-
-
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
+class TopicForm(FlaskForm):
+    title = StringField('Title',validators=[DataRequired()])
+    body = StringField('Body',validators=[DataRequired()])
+    submit = SubmitField('Submit')
