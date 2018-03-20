@@ -54,7 +54,7 @@ def login():
         return DatabaseManager.login(form.username.data, form.password.data, \
         form.remember_me.data)
     ## If information does not match any accounts, return user to login page
-    return render_template('logidn.html', title='Sign In', form=form)
+    return render_template('login.html', title='Sign In', form=form)
 
 @app.route('/logout')
 def logout():
@@ -83,5 +83,5 @@ def viewTopic(id):
     comments = DatabaseManager.getAllComments()
     if form.validate_on_submit():
         DatabaseManager.addComment(user_id=current_user.id,topic_id=id,body=form.comment.data)
-        return redirect(url_for('home'))
+        return redirect(url_for('viewTopic',id=id))
     return render_template('post.html', title='View Topic',topic=topic,comments=comments,form=form)

@@ -4,16 +4,8 @@
 {% block content %}
     <div style="padding:50px; border:solid" align="center">
         <h1>Hi, {{ current_user.username }}!</h1>
-        {% for user in users %}
-            <div><p><b>USERNAME:</b> {{ user.username }} <b>EMAIL:</b> {{ user.email }}</p></div>
-        {% endfor %}
         {% for topic in topics %}
             <div><p><b>USER:</b> {{ topic.author.username }} <b>TOPIC:</b><a class="active" href="{{ url_for('viewTopic',id=topic.id )}}">{{topic.title}}</a></p></div>
-            {% for c in comments %}
-                {% if c.topic_id == topic.id %}
-                    <p>ID: {{ c.user_id }}  COMMENT: {{ c.body }}</p>
-                {% endif %}
-            {% endfor %}
         {% endfor %}
     <div>
 {% endblock %}
