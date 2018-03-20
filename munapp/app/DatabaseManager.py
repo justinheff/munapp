@@ -78,15 +78,15 @@ def addTopic(user_id, title, body, public=True):
     flash('Topic created!')
 	
 def addComment(user_id, topic_id, body):
-    ## Initialize topic attributes
+    ## Initialize comment attributes
     comment = Comment()
     comment.user_id = user_id
     comment.topic_id = topic_id
     comment.body = body
-    ## add new topic to the database and commit the change
+    ## add new comment to the database and commit the change
     db.session.add(comment)
     db.session.commit()
-    ## DEBUG: Find a better way to confirm topic being successfully created to user
+    ## DEBUG
     ## Display a message to make sure this works
     flash('Comment created!')
 
