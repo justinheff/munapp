@@ -46,3 +46,7 @@ class TopicForm(FlaskForm):
     title = StringField('Title',validators=[DataRequired()])
     body = StringField('Body',validators=[DataRequired()])
     submit = SubmitField('Submit')
+	
+class CommentForm(FlaskForm):
+    comment = StringField('Comment',validators=[DataRequired()])
+    submit = SubmitField('Submit')

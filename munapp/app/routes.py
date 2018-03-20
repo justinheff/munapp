@@ -7,6 +7,7 @@ from app import DatabaseManager
 from app.forms import RegistrationForm
 from app.forms import LoginForm
 from app.forms import TopicForm
+from app.forms import CommentForm
 from app.models import User,Topic,Comment
 from werkzeug.urls import url_parse
 
@@ -75,7 +76,12 @@ def createTopic():
         return redirect(url_for('home'))
     return render_template('create_topic.html', title='Create New Topic', form=form)
 	
-@app.route('/view_topic/<id>')
+@app.route('/post/<id>', methods = ['GET', 'POST'])
 def viewTopic(id):
+    form = CommentForm()
     topic = DatabaseManager.getTopic(id)
-    return render_template('view_topic.html', title='View Topic',topic=topic)
+    comments = DatabaseManager.getAllComments()
+    if form.validate_on_submit():
+        DatabaseManager.addComment(user_id=current_user.id,topic_id=id,body=form.comment.data)
+        return redirect(url_for('home'))
+    return render_template('post.html', title='View Topic',topic=topic,comments=comments,form=form)

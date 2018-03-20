@@ -32,7 +32,6 @@ class Topic(db.Model):
     body = db.Column(db.String(512))
     timestamp = timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     public = True
-
     def __repr__(self):
         return '<Topic {}>'.format(self.title)
 

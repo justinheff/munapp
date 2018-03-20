@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content%}
+
+	<div style="padding:50px; border:solid" align="left">
+		<h1>{{ topic.title }}</h1>
+		<div><p>{{ topic.body }}</p></div>
+		
+		<form action="" method="post">
+			{{ form.csrf_token }}
+			<p>
+                {{ form.comment.label }}<br>
+                {{ form.comment(size=100)}}
+            </p>
+			<!-- <label for="comment"> Post a comment:</label> -->
+			<!-- <textarea id="comment" name="user_comment"></textarea><br> -->
+			<p>{{ form.submit() }}</p>
+		</form>
+		{% for comment in comments %}
+            {% if comment.topic_id == topic.id %}
+            	<p>ID: {{ comment.user_id }}  COMMENT: {{ comment.body }}</p>
+            {% endif %}
+        {% endfor %}
+	</div>
+{% endblock %}
