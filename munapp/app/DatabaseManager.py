@@ -87,3 +87,8 @@ def getAllTopics():
 def getTopicComments(tid):
     comments = Comment.query.filter_by(topic_id=tid)
     return comments
+
+## Get specific topic from database
+def getTopic(id):
+	topic = Topic.query.get(id)
+	return topic

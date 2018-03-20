@@ -7,7 +7,7 @@ from app import DatabaseManager
 from app.forms import RegistrationForm
 from app.forms import LoginForm
 from app.forms import TopicForm
-from app.models import User
+from app.models import User,Topic,Comment
 from werkzeug.urls import url_parse
 
 @app.route('/')
@@ -53,7 +53,7 @@ def login():
         return DatabaseManager.login(form.username.data, form.password.data, \
         form.remember_me.data)
     ## If information does not match any accounts, return user to login page
-    return render_template('login.html', title='Sign In', form=form)
+    return render_template('logidn.html', title='Sign In', form=form)
 
 @app.route('/logout')
 def logout():
@@ -74,3 +74,8 @@ def createTopic():
         DatabaseManager.addTopic(user_id=current_user.id,title=form.title.data,body=form.body.data)
         return redirect(url_for('home'))
     return render_template('create_topic.html', title='Create New Topic', form=form)
+	
+@app.route('/view_topic/<id>')
+def viewTopic(id):
+    topic = DatabaseManager.getTopic(id)
+    return render_template('view_topic.html', title='View Topic',topic=topic)
