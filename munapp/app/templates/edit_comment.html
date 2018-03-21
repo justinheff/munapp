@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content%}
+
+	<div style="padding:50px; border:solid" align="left">	
+		<form action="" method="post">
+			{{ form.csrf_token }}
+			<p>
+                {{ form.comment.label }}<br>
+                {{ form.comment(size=100)}}
+            </p>
+			<p>{{ form.submit() }}</p>
+		</form>
+	</div>
+{% endblock %}

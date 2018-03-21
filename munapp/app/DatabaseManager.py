@@ -105,3 +105,12 @@ def getTopicComments(tid):
 def getTopic(id):
 	topic = Topic.query.get(id)
 	return topic
+
+def getComment(id):
+	comment = Comment.query.get(id)
+	return comment
+
+def editComment(id,body):
+    comment = Comment.query.get(id)
+    comment.body = body
+    db.session.commit()

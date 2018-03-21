@@ -85,3 +85,12 @@ def viewTopic(id):
         DatabaseManager.addComment(user_id=current_user.id,topic_id=id,body=form.comment.data)
         return redirect(url_for('viewTopic',id=id))
     return render_template('post.html', title='View Topic',topic=topic,comments=comments,form=form)
+    
+@app.route('/edit_comment/<id>', methods = ['GET', 'POST'])
+def editComment(id):
+    form = CommentForm()
+    comment = DatabaseManager.getComment(id)
+    if form.validate_on_submit():
+        DatabaseManager.editComment(id=id,body=form.comment.data)
+        return redirect(url_for('viewTopic',id=comment.topic_id))
+    return render_template('edit_comment.html', title='Edit Comment',form=form,comment=comment)
