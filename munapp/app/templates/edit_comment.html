@@ -7,7 +7,7 @@
 			{{ form.csrf_token }}
 			<p>
                 {{ form.comment.label }}<br>
-                {{ form.comment(size=100)}}
+                {{ form.comment(size=100,value=comment.body)}}
             </p>
 			<p>{{ form.submit() }}</p>
 		</form>
