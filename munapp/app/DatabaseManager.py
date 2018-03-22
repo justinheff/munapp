@@ -106,11 +106,20 @@ def getTopic(id):
 	topic = Topic.query.get(id)
 	return topic
 
+## Get specific comment from database
 def getComment(id):
 	comment = Comment.query.get(id)
 	return comment
 
+## Edit specific comment and commit to database
 def editComment(id,body):
-    comment = Comment.query.get(id)
+    comment = getComment(id)
     comment.body = body
+    db.session.commit()
+    
+## Edit specific topic and commit to database
+def editTopic(id,title,body):
+    topic= getTopic(id)
+    topic.title = title
+    topic.body = body
     db.session.commit()
