@@ -30,6 +30,8 @@
                 <li><a class="active" href="{{ url_for('register') }}">Sign up</a></li>
                 {% else %}
                 <li><a class="active" href="{{ url_for('createTopic') }}">Create New Topic</a></li>
+                <li><a class="active" href="{{ url_for('createGroup') }}">Create New Group</a></li>
+                <li><a class="active" href="{{ url_for('myGroups') }}">My Groups</a></li>
                 <li><a class="active" href="{{ url_for('logout') }}">Logout</a></li>
                 {% endif %}
             </ul>

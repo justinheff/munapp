@@ -2,10 +2,10 @@
 ## TODO: Change this so ID's are added automatically
 
 from flask import render_template, flash, redirect, url_for, request
-from flask_login import login_user, logout_user
+from flask_login import current_user, login_user, logout_user
 from app import app
 from app import db
-from app.models import User, Topic, Comment
+from app.models import User, Topic, Comment, Group, group_identifier
 
 ## DEBUG: here to test and creating examples
 ## Get all users from the database
@@ -112,14 +112,27 @@ def getComment(id):
 	return comment
 
 ## Edit specific comment and commit to database
-def editComment(id,body):
+def editComment(id, body):
     comment = getComment(id)
     comment.body = body
     db.session.commit()
     
 ## Edit specific topic and commit to database
-def editTopic(id,title,body):
+def editTopic(id, title, body):
     topic= getTopic(id)
     topic.title = title
     topic.body = body
+    db.session.commit()
+    
+## Get specific group from database
+def getGroup(id):
+	group = Group.query.get(id)
+	return group
+
+## Add group to database
+def addGroup(name):
+    group = Group()
+    group.name = name
+    group.members.append(current_user)
+    db.session.add(group)
     db.session.commit()

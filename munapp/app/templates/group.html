@@ -1,0 +1,12 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+    <div style="padding:50px; border:solid" align="center">
+        <h1>Hi, {{ current_user.username }}!</h1>
+        <h1>{{group.name}}</h1>
+        {% for topic in topics %}
+            <div><p><b>USER:</b> {{ topic.author.username }} <b>TOPIC:</b><a class="active" href="{{ url_for('viewTopic',id=topic.id )}}">{{topic.title}}</a></p></div>
+        {% endfor %}
+    <div>
+{% endblock %}

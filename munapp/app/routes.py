@@ -4,11 +4,8 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app import app
 from app import db
 from app import DatabaseManager
-from app.forms import RegistrationForm
-from app.forms import LoginForm
-from app.forms import TopicForm
-from app.forms import CommentForm
-from app.models import User,Topic,Comment
+from app.forms import RegistrationForm, LoginForm, TopicForm, CommentForm, GroupForm
+from app.models import User,Topic,Comment,Group
 from werkzeug.urls import url_parse
 
 @app.route('/')
@@ -103,3 +100,28 @@ def editTopic(id):
         DatabaseManager.editTopic(id=id,title=form.title.data, body=form.body.data)
         return redirect(url_for('viewTopic',id=id))
     return render_template('edit_topic.html', title='Edit Topic',form=form,topic=topic)
+
+@app.route('/create_group', methods = ['GET', 'POST'])    
+def createGroup():
+    ## Allows current user to create a new group
+    form = GroupForm()
+    if form.validate_on_submit():
+        DatabaseManager.addGroup(name=form.name.data)
+        return redirect(url_for('home'))
+    return render_template('create_group.html',form=form)
+    
+@app.route('/my_groups', methods = ['GET', 'POST'])
+def myGroups():
+    ## TESTING ONLY - WILL BE REMOVED WHEN PROFILES ARE DONE
+    ## Shows a user's current groups
+    return render_template('my_groups.html', title='My Groups')
+    
+@app.route('/group/<id>', methods = ['GET', 'POST'])
+def viewGroup(id):
+    group = DatabaseManager.getGroup(id)
+    return render_template('group.html', group=group, title=group.name)
+    
+ 
+
+    
+    

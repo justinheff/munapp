@@ -6,7 +6,7 @@ from string import punctuation
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
-from app.models import User
+from app.models import User, Group
 
 
 ## Test used in RegistrationForm that checks password for a special character
@@ -49,4 +49,8 @@ class TopicForm(FlaskForm):
 	
 class CommentForm(FlaskForm):
     comment = StringField('Comment',validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class GroupForm(FlaskForm):
+    name = StringField('Group Name',validators=[DataRequired()])
     submit = SubmitField('Submit')
