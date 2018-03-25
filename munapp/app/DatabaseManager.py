@@ -136,3 +136,18 @@ def addGroup(name):
     group.members.append(current_user)
     db.session.add(group)
     db.session.commit()
+
+## Add member to specified group    
+def addGroupMember(user,group):
+    group.members.append(user)
+    db.session.commit()
+    
+## Get specific user by user ID
+def getUser(id):
+    user = User.query.get(id)
+    return user
+
+## Get specific user by username from database    
+def getUserByUsername(username):
+    user = User.query.filter_by(username=username).first()
+    return user

@@ -54,3 +54,7 @@ class CommentForm(FlaskForm):
 class GroupForm(FlaskForm):
     name = StringField('Group Name',validators=[DataRequired()])
     submit = SubmitField('Submit')
+    
+class AddUserForm(FlaskForm):
+    username = StringField('Username:',validators=[DataRequired()])
+    submit = SubmitField('Submit')

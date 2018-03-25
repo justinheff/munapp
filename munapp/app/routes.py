@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app import app
 from app import db
 from app import DatabaseManager
-from app.forms import RegistrationForm, LoginForm, TopicForm, CommentForm, GroupForm
+from app.forms import RegistrationForm, LoginForm, TopicForm, CommentForm, GroupForm, AddUserForm
 from app.models import User,Topic,Comment,Group
 from werkzeug.urls import url_parse
 
@@ -74,6 +74,7 @@ def createTopic():
     return render_template('create_topic.html', title='Create New Topic', form=form)
 	
 @app.route('/post/<id>', methods = ['GET', 'POST'])
+@login_required
 def viewTopic(id):
     form = CommentForm()
     topic = DatabaseManager.getTopic(id)
@@ -84,6 +85,7 @@ def viewTopic(id):
     return render_template('post.html', title='View Topic',topic=topic,comments=comments,form=form)
     
 @app.route('/edit_comment/<id>', methods = ['GET', 'POST'])
+@login_required
 def editComment(id):
     form = CommentForm()
     comment = DatabaseManager.getComment(id)
@@ -93,6 +95,7 @@ def editComment(id):
     return render_template('edit_comment.html', title='Edit Comment',form=form,comment=comment)
 
 @app.route('/edit_topic/<id>', methods = ['GET', 'POST'])
+@login_required
 def editTopic(id):
     form = TopicForm()
     topic = DatabaseManager.getTopic(id)
@@ -101,7 +104,8 @@ def editTopic(id):
         return redirect(url_for('viewTopic',id=id))
     return render_template('edit_topic.html', title='Edit Topic',form=form,topic=topic)
 
-@app.route('/create_group', methods = ['GET', 'POST'])    
+@app.route('/create_group', methods = ['GET', 'POST'])
+@login_required    
 def createGroup():
     ## Allows current user to create a new group
     form = GroupForm()
@@ -111,15 +115,25 @@ def createGroup():
     return render_template('create_group.html',form=form)
     
 @app.route('/my_groups', methods = ['GET', 'POST'])
+@login_required
 def myGroups():
     ## TESTING ONLY - WILL BE REMOVED WHEN PROFILES ARE DONE
     ## Shows a user's current groups
     return render_template('my_groups.html', title='My Groups')
     
 @app.route('/group/<id>', methods = ['GET', 'POST'])
+@login_required
 def viewGroup(id):
     group = DatabaseManager.getGroup(id)
-    return render_template('group.html', group=group, title=group.name)
+    form = AddUserForm()
+    if form.validate_on_submit():
+        user = DatabaseManager.getUserByUsername(form.username.data)
+        if user is None:
+            flash('No such user exists')
+        else:
+            DatabaseManager.addGroupMember(user=user,group=group)
+            return render_template('group.html', group=group, title=group.name,form=form)
+    return render_template('group.html', group=group, title=group.name,form=form)
     
  
 
