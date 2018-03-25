@@ -61,16 +61,21 @@ def logout():
 @login_required
 def index():
     users = DatabaseManager.getAllUsers()
-    topics = DatabaseManager.getAllTopics()
+    topics = DatabaseManager.getAllPublicTopics()
     comments = DatabaseManager.getAllComments()
     return render_template('index.html', title='Home', users=users, topics=topics, comments=comments)
-    
-@app.route('/create_topic', methods = ['GET', 'POST'])
-def createTopic():
+ 
+@app.route('/create_topic/', methods = ['GET', 'POST'])
+@app.route('/create_topic/<group_id>', methods = ['GET', 'POST'])
+@login_required
+def createTopic(group_id=None):
     form = TopicForm()
     if form.validate_on_submit():
-        DatabaseManager.addTopic(user_id=current_user.id,title=form.title.data,body=form.body.data)
-        return redirect(url_for('home'))
+        DatabaseManager.addTopic(user_id=current_user.id,title=form.title.data,body=form.body.data,group_id=group_id)
+        if group_id is None:
+            return redirect(url_for('home'))
+        else:
+            return redirect(url_for('viewGroup',id=group_id))
     return render_template('create_topic.html', title='Create New Topic', form=form)
 	
 @app.route('/post/<id>', methods = ['GET', 'POST'])
@@ -78,32 +83,51 @@ def createTopic():
 def viewTopic(id):
     form = CommentForm()
     topic = DatabaseManager.getTopic(id)
-    comments = DatabaseManager.getAllComments()
-    if form.validate_on_submit():
-        DatabaseManager.addComment(user_id=current_user.id,topic_id=id,body=form.comment.data)
-        return redirect(url_for('viewTopic',id=id))
-    return render_template('post.html', title='View Topic',topic=topic,comments=comments,form=form)
+    comments = DatabaseManager.getTopicComments(id)
+    if topic.group_id is not None:
+        group = DatabaseManager.getGroup(topic.group_id)
+        if DatabaseManager.checkMember(current_user,group):
+            if form.validate_on_submit():
+                DatabaseManager.addComment(user_id=current_user.id,topic_id=id,body=form.comment.data)
+                return redirect(url_for('viewTopic',id=id))
+            return render_template('post.html', title='View Topic',topic=topic,comments=comments,form=form)
+        else:
+            flash('You are not a member of the group this topic belongs to')
+            return redirect(url_for('home'))
+    else:
+        if form.validate_on_submit():
+            DatabaseManager.addComment(user_id=current_user.id,topic_id=id,body=form.comment.data)
+            return redirect(url_for('viewTopic',id=id))
+        return render_template('post.html', title='View Topic',topic=topic,comments=comments,form=form)
     
 @app.route('/edit_comment/<id>', methods = ['GET', 'POST'])
 @login_required
 def editComment(id):
     form = CommentForm()
     comment = DatabaseManager.getComment(id)
-    if form.validate_on_submit():
-        DatabaseManager.editComment(id=id,body=form.comment.data)
-        return redirect(url_for('viewTopic',id=comment.topic_id))
-    return render_template('edit_comment.html', title='Edit Comment',form=form,comment=comment)
+    if DatabaseManager.checkCommentAuthor(current_user,comment):
+        if form.validate_on_submit():
+            DatabaseManager.editComment(id=id,body=form.comment.data)
+            return redirect(url_for('viewTopic',id=comment.topic_id))
+        return render_template('edit_comment.html', title='Edit Comment',form=form,comment=comment)
+    else:
+        flash('You are not eligible to edit this comment')
+        return redirect(url_for('home'))
 
 @app.route('/edit_topic/<id>', methods = ['GET', 'POST'])
 @login_required
 def editTopic(id):
     form = TopicForm()
     topic = DatabaseManager.getTopic(id)
-    if form.validate_on_submit():
-        DatabaseManager.editTopic(id=id,title=form.title.data, body=form.body.data)
-        return redirect(url_for('viewTopic',id=id))
-    return render_template('edit_topic.html', title='Edit Topic',form=form,topic=topic)
-
+    if DatabaseManager.checkTopicAuthor(current_user,topic):
+        if form.validate_on_submit():
+            DatabaseManager.editTopic(id=id,title=form.title.data, body=form.body.data)
+            return redirect(url_for('viewTopic',id=id))
+        return render_template('edit_topic.html', title='Edit Topic',form=form,topic=topic)
+    else:
+        flash('You are not elgible to edit this topic')
+        return redirect(url_for('home'))
+        
 @app.route('/create_group', methods = ['GET', 'POST'])
 @login_required    
 def createGroup():
@@ -125,17 +149,17 @@ def myGroups():
 @login_required
 def viewGroup(id):
     group = DatabaseManager.getGroup(id)
-    form = AddUserForm()
-    if form.validate_on_submit():
-        user = DatabaseManager.getUserByUsername(form.username.data)
-        if user is None:
-            flash('No such user exists')
-        else:
-            DatabaseManager.addGroupMember(user=user,group=group)
-            return render_template('group.html', group=group, title=group.name,form=form)
-    return render_template('group.html', group=group, title=group.name,form=form)
-    
- 
-
-    
+    if DatabaseManager.checkMember(current_user,group):
+        form = AddUserForm()
+        if form.validate_on_submit():
+            user = DatabaseManager.getUserByUsername(form.username.data)
+            if user is None:
+                flash('No such user exists')
+            else:
+                DatabaseManager.addGroupMember(user=user,group=group)
+                return render_template('group.html', group=group, title=group.name,form=form)
+        return render_template('group.html', group=group, title=group.name,form=form)
+    else:
+        flash('You are not a member of the specified group')
+        return redirect(url_for('home'))
     

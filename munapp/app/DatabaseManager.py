@@ -63,13 +63,14 @@ def logout():
     return redirect(url_for('home'))
 
 ## Add topic to database
-def addTopic(user_id, title, body, public=True):
+def addTopic(user_id, title, body, group_id, public=True):
     ## Initialize topic attributes
     topic = Topic()
     topic.user_id = user_id
     topic.title = title
     topic.body = body
     topic.public = public
+    topic.group_id = group_id
     ## add new topic to the database and commit the change
     db.session.add(topic)
     db.session.commit()
@@ -149,5 +150,34 @@ def getUser(id):
 
 ## Get specific user by username from database    
 def getUserByUsername(username):
+    """Searches the database for a given username"""
     user = User.query.filter_by(username=username).first()
     return user
+
+## Check if a user is a member of a group    
+def checkMember(user,group):
+    """Check if a user is a member of a group"""
+    if user in group.members:
+        return True
+    else:
+        return False
+        
+def getAllPublicTopics():
+    """Returns all topics that have None as their group id (ie. all public topics)"""
+    topics = Topic.query.filter_by(group_id=None)
+    return topics
+
+def checkTopicAuthor(user,topic):
+    """Check if the current user is the author of a topic - used for when editing a topic"""
+    if user.id is topic.author.id:
+        return True
+    else:
+        return False
+        
+def checkCommentAuthor(user,comment):
+    """Check if the user is the author of a comment - used for when editing a comment"""
+    if user.id is comment.author.id:
+        return True
+    else:
+        return False
+    

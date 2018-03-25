@@ -2,28 +2,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div style="padding:50px; border:solid" align="center">
+    <div style="padding:20px; border:solid" align="center">
         <h1>Hi, {{ current_user.username }}!</h1>
         <h1>Welcome to {{group.name}}</h1>
-        <div class="inline">
-            {% for topic in group.topics %}
-                <div><p><b>USER:</b> {{ topic.author.username }} <b>TOPIC:</b><a class="active" href="{{ url_for('viewTopic',id=topic.id )}}">{{topic.title}}</a></p></div>
-            {% endfor %}
-        </div>
-       
-        <div class="inline">
-        <h2>Current Members</h2>
-            {% for member in group.members %}
-                <div><p><b>USER:</b> {{member.username}}</p></div>
-            {% endfor %}
-        <h2>Add new member</h2>
-            <form action="" method="post">
-            {{ form.csrf_token }} 
-            <p>
-                {{ form.username.label }}
-                {{ form.username(size=30)}}
-                {{ form.submit() }}
-            </p>            
-        </div>
-    <div>
-{% endblock %}
+    </div>
+    <div class="inline" align ="center">
+        <h2>Group Discussions</h2>
+        {% for topic in group.topics %}
+            <div><p><b>USER:</b> {{ topic.author.username }} <b>TOPIC:</b><a class="active" href="{{ url_for('viewTopic',id=topic.id )}}">{{topic.title}}</a></p></div>
+        {% endfor %}
+        <div><p><a class="active" href="{{ url_for('createTopic',group_id=group.id)}}">Add New Discussion</a></p></div>
+    </div>
+    <div class="inline" align="center">
+    <h2>Current Members</h2>
+        {% for member in group.members %}
+            <div><p><b>USER:</b> {{member.username}}</p></div>
+        {% endfor %}
+    <h2>Add new member</h2>
+        <form action="" method="post">
+        {{ form.csrf_token }} 
+        <p>
+            {{ form.username.label }}
+            {{ form.username(size=30)}}
+            {{ form.submit() }}
+        </p>            
+    </div>
+{% endblock %}                                                    

@@ -20,11 +20,9 @@
 			<p>{{ form.submit() }}</p>
 		</form>
 		{% for comment in comments %}
-            {% if comment.topic_id == topic.id %}
-            	<p>USERNAME: {{ comment.author.username }}  COMMENT: {{ comment.body }}</p>
-                {% if current_user.id == comment.user_id %}
-                    <p><a class="active" href="{{ url_for('editComment',id=comment.id )}}">Edit Comment</a></p>
-                {% endif %}
+            <p>USERNAME: {{ comment.author.username }}  COMMENT: {{ comment.body }}</p>
+            {% if current_user.id == comment.user_id %}
+                <p><a class="active" href="{{ url_for('editComment',id=comment.id )}}">Edit Comment</a></p>
             {% endif %}
         {% endfor %}
 	</div>
